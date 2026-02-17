@@ -14,7 +14,7 @@
 				"inputs": [
 					{
 						"internalType": "address payable",
-						"name": "walletAddress",
+						"name": "wallet",
 						"type": "address"
 					},
 					{
@@ -28,23 +28,92 @@
 						"type": "uint256"
 					}
 				],
-				"name": "addWaitress",
+				"name": "addOrUpdateWaitress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "addtips",
+				"name": "addTips",
 				"outputs": [],
 				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "distributeBalance",
+				"name": "distribute",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "emergencyWithdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getTotalPercentage",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "total",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getWaitresses",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address payable",
+								"name": "wallet",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "percent",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Tips.Waitress[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "hasReceived",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -64,61 +133,18 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "walletAddress",
+						"name": "wallet",
 						"type": "address"
 					}
 				],
-				"name": "removeWaitress",
+				"name": "removePaidWaitress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "totalPercent",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "total",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "viewWaitress",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "address payable",
-								"name": "walletAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "name",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "percent",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct tips.Waitress[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "viewtips",
+				"name": "viewTips",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -137,11 +163,11 @@
 						"type": "uint256"
 					}
 				],
-				"name": "waitress",
+				"name": "waitresses",
 				"outputs": [
 					{
 						"internalType": "address payable",
-						"name": "walletAddress",
+						"name": "wallet",
 						"type": "address"
 					},
 					{
@@ -172,7 +198,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"tipjar.sol": "tips"
+			"tipjar.sol": "Tips"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},
@@ -187,11 +213,11 @@
 	},
 	"sources": {
 		"tipjar.sol": {
-			"keccak256": "0x9c5779ffc5fbb704c230cfdcf4674393275777b6db4eac79d42ea6fe1c488ece",
+			"keccak256": "0x946b1cb5789cf4d51285eb36bbd52762dcc62baae39bae41e3c31ed58f73e6de",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2f15ad908fad2cc8aa6ab5921da8736768cbe00f2fa5fb26b99a7f0369643100",
-				"dweb:/ipfs/Qmagtoie98S5smCqYGsFeNF1sDtCRn7qKJwkTteAk4ms1V"
+				"bzz-raw://6e359cb91eedaa6bc2756dc67b1ee59d934557d234322139dbc77096bbac2512",
+				"dweb:/ipfs/QmTu2XxhC2RMgy6jeHoWnha2wFnPV2M1depJvGKw4dNZgp"
 			]
 		}
 	},

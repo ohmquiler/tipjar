@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.31;
+
+contract Tips {
+    address public immutable owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner");
+        _;
+    }
+
+    /* -------------------- Tips -------------------- */
+
+    function addTips() external payable {}
+
+    function viewTips() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    /* -------------------- Waitress -------------------- */
+
+    struct Waitress {
+        address payable wallet;
+        string name;
+        uint256 percent; // 0 - 100
+    }
+
+    Waitress[] public waitresses;
+
+    // บันทึกว่าเคยได้รับเงินแล้วหรือยัง
+    mapping(address => bool) public hasReceived;
+
+    function getWaitresses() external view returns (Waitress[] memory) {
+        return waitresses;
+    }
+
+    function getTotalPercentage() public view returns (uint256 total) {
+        for (uint256 i = 0; i < waitresses.length; i++) {
+            total += waitresses[i].percent;
+        }
+    }
+
+    /* -------------------- Add / Update -------------------- */
+
+    function addOrUpdateWaitress(
+        address payable wallet,
+        string calldata name,
+        uint256 percent
+    ) external onlyOwner {
+        require(wallet != address(0), "Invalid wallet");
+        require(percent <= 100, "Percent > 100");
+
+        uint256 total = getTotalPercentage();
+
+        // update case
+        for (uint256 i = 0; i < waitresses.length; i++) {
+            if (waitresses[i].wallet == wallet) {
+                uint256 newTotal =
+                    total - waitresses[i].percent + percent;
+
+                require(newTotal <= 100, "Total percent > 100");
+
+                waitresses[i].name = name;
+                waitresses[i].percent = percent;
+                return;
+            }
+        }
+
+        // add new
+        require(total + percent <= 100, "Total percent > 100");
+        waitresses.push(Waitress(wallet, name, percent));
+    }
+
+    /* -------------------- Remove (เฉพาะคนที่เคยรับเงิน) -------------------- */
+
+    function removePaidWaitress(address wallet) external onlyOwner {
+        require(hasReceived[wallet], "This waitress never received tips");
+
+        for (uint256 i = 0; i < waitresses.length; i++) {
+            if (waitresses[i].wallet == wallet) {
+                waitresses[i] = waitresses[waitresses.length - 1];
+                waitresses.pop();
+                return;
+            }
+        }
+
+        revert("Waitress not found");
+    }
+
+    /* -------------------- Distribution -------------------- */
+
+    function distribute() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No tips");
+
+        for (uint256 i = 0; i < waitresses.length; i++) {
+            uint256 amount = (balance * waitresses[i].percent) / 100;
+            if (amount == 0) continue;
+
+            (bool ok, ) = waitresses[i].wallet.call{value: amount}("");
+            require(ok, "Transfer failed");
+
+            // mark ว่าเคยได้รับเงินแล้ว
+            hasReceived[waitresses[i].wallet] = true;
+        }
+    }
+
+    /* -------------------- Emergency -------------------- */
+
+    function emergencyWithdraw() external onlyOwner {
+        (bool ok, ) = payable(owner).call{value: address(this).balance}("");
+        require(ok, "Withdraw failed");
+    }
+}
